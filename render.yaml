@@ -1,0 +1,44 @@
+﻿# Render blueprint for the PRISM backend (standalone repo).
+#
+# The Dockerfile, sources, and Flyway migrations all live at this repo root,
+# so unlike the monorepo blueprint no subdirectory paths are needed.
+# Every secret is `sync: false` - set each once in the Render dashboard.
+services:
+  - type: web
+    name: prism-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        value: jdbc:mysql://mysql-2215e10b-chaturrr18-4179.k.aivencloud.com:28441/defaultdb?useSSL=true&requireSSL=true&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - key: DB_USERNAME
+        value: avnadmin
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://prism-murex-five.vercel.app
+      - key: LLM_PROVIDER
+        value: openai
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_EXTRACT_MODEL
+        value: openai/gpt-oss-20b
+      - key: LLM_JUDGE_MODEL
+        value: openai/gpt-oss-20b
+      - key: LLM_DEBATE_MODEL
+        value: openai/gpt-oss-20b
+      - key: LLM_SYNTHESIS_MODEL
+        value: openai/gpt-oss-20b
+      - key: LLM_CHAT_MODEL
+        value: openai/gpt-oss-20b
+      - key: LLM_TIMEOUT_SECONDS
+        value: 300
+      - key: LLM_MIN_INTERVAL_MILLIS
+        value: 25000
